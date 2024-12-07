@@ -1,19 +1,15 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WalletCard from '@/components/WalletCard';
 import TransactionList from '@/components/Transaction';
 import Leaderboard from '@/components/Leaderboard';
 import { AgentState, Transaction, LeaderboardEntry } from '@/types';
+import { getWalletBalance } from '@/utils/chain';
+
+const WALLET_ADDRESS = '0x306404AEF545ec8D7591a9cE0c73BB83dbbb0a40';
 
 // Dummy data
-const dummyAgentState: AgentState = {
-  wallet_address: '0xACa55b37f61406E16821dDE30993348bac6fC456',
-  balance: '1.234',
-  network: 'Base Sepolia',
-  status: 'active',
-};
-
 const dummyTransactions: Transaction[] = [
   {
     id: '1',
@@ -37,7 +33,28 @@ const dummyLeaderboard: LeaderboardEntry[] = [
 ];
 
 export default function Dashboard() {
-  const [agentState] = useState<AgentState>(dummyAgentState);
+  const [agentState, setAgentState] = useState<AgentState>({
+    wallet_address: WALLET_ADDRESS,
+    balance: '0',
+    network: 'Base Sepolia',
+    status: 'active',
+  });
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const balance = await getWalletBalance(WALLET_ADDRESS);
+      setAgentState(prev => ({
+        ...prev,
+        balance
+      }));
+    };
+
+    fetchBalance();
+    // Set up polling every 30 seconds
+    const interval = setInterval(fetchBalance, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleFundWallet = () => {
     // Implement funding logic
