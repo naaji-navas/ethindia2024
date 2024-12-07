@@ -49,12 +49,12 @@ export default function WalletCard({ agentState, onFundWallet }: WalletCardProps
             <p className="text-sm text-gray-900">Balance</p>
             <p className="font-semibold text-gray-700">{agentState.balance} USDC</p>
           </div>
-          <button
+          {/* <button
             onClick={onFundWallet}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Fund Wallet
-          </button>
+          </button> */}
         </div>
         
         <div>
