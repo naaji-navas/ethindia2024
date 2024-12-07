@@ -1,0 +1,4 @@
+twitter_handle,post_link,impressions,wallet_address
+elonmusk,https://twitter.com/elonmusk/status/1677471051073523712,1000000,0x1234567890abcdef1234567890abcdef
+billgates,https://twitter.com/BillGates/status/1677482131870128128,500000,0x9876543210fedcba9876543210fedcba
+jack,https://twitter.com/jack/status/1677491111767224320,250000,0xabcdef1234567890abcdef1234567890
