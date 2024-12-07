@@ -87,7 +87,8 @@ export async function getWalletTransactions(address: string): Promise<Transactio
               status: 'success',
               details: `${isIncoming ? 'Received' : 'Sent'} ${valueInUSDC} USDC ${isIncoming ? 'from' : 'to'} ${shortAddress(isIncoming ? tx.from : tx.to)}`,
               amount: valueInUSDC,
-              recipient: tx.to
+              recipient: tx.to,
+              transaction_hash: tx.hash
             };
           } catch (err) {
             console.error('Error processing transaction:', err);
