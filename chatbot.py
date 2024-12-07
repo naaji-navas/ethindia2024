@@ -6,6 +6,9 @@ import pandas as pd
 from typing import List
 from datetime import datetime
 import requests
+import firebase_admin
+from firebase_admin import credentials, firestore, db as realtime_db
+
 
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI 
@@ -18,6 +21,7 @@ from pydantic import BaseModel, Field
 from cdp import *
 
 wallet_data_file = "wallet_data.txt"
+db = None
 
 class TransferInput(BaseModel):
     recipient_address: str = Field(..., description="The recipient wallet address")
@@ -28,6 +32,86 @@ class SignMessageInput(BaseModel):
 
 class RewardInput(BaseModel):
     total_reward: str = Field(..., description="The total reward amount to distribute")
+
+def initialize_firebase():
+    try:
+        cred = credentials.Certificate("./firebaseconfig.json")
+        firebase_admin.initialize_app(cred, {
+            'databaseURL': 'https://sathoshi-470e1-default-rtdb.firebaseio.com/'
+        })
+        return realtime_db
+    except Exception as e:
+        print(f"Error initializing Firebase: {e}")
+        return None
+
+def store_leaderboard(leaderboard):
+    """Store leaderboard and update leaderboard history."""
+    try:
+        # Get references to Realtime Database paths
+        leaderboard_ref = db.reference('/leaderboard')
+        history_ref = db.reference('/leaderboard_history')
+
+        # Current timestamp
+        current_time = datetime.now().isoformat()
+
+        # Format leaderboard data with rankings
+        leaderboard_data = {
+            "entries": {
+                str(rank + 1): {
+                    "rank": rank + 1,
+                    "twitter_handle": entry["twitter_handle"],
+                    "post_link": entry["post_link"],
+                    "score": entry["score"],
+                    "wallet_address": entry["wallet_address"]
+                }
+                for rank, entry in enumerate(leaderboard)
+            },
+            "metadata": {
+                "timestamp": current_time,
+                "total_participants": len(leaderboard),
+                "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        }
+
+        # Update current leaderboard
+        leaderboard_ref.child('current').set(leaderboard_data)
+
+        # Add to history with a unique key based on timestamp
+        history_key = current_time.replace(':', '-').replace('.', '-')
+        history_ref.child(history_key).set(leaderboard_data)
+
+        print("Leaderboard and history stored in Firebase successfully.")
+        print("Current leaderboard data structure:", json.dumps(leaderboard_data, indent=2))
+    except Exception as e:
+        print(f"Error storing leaderboard: {e}")
+
+def store_transaction(transaction_details):
+    """Store transaction details in Firebase."""
+    try:
+        # Get reference to transactions path
+        transaction_ref = db.reference('/transactions')
+
+        # Create a unique key based on timestamp
+        timestamp = datetime.now().isoformat()
+        transaction_key = timestamp.replace(':', '-').replace('.', '-')
+
+        # Format transaction data
+        transaction_data = {
+            "wallet_address": transaction_details.get("wallet_address", ""),
+            "leaderboard_signature": transaction_details.get("leaderboard_signature", ""),
+            "distribution_results": transaction_details.get("distribution_results", []),
+            "timestamp": timestamp
+        }
+
+        # Store transaction with timestamp
+        transaction_ref.child(transaction_key).set(transaction_data)
+
+        print("Transaction details stored in Firebase successfully.")
+    except Exception as e:
+        print(f"Error storing transaction details: {e}")
+
+
+
 
 def search_tweets(query, bearer_token):
     """Search for tweets with a specific query."""
@@ -46,6 +130,7 @@ def search_tweets(query, bearer_token):
     }
 
     response = requests.get(url, headers=headers, params=params)
+
     if response.status_code == 429:
         # Too Many Requests
         print("Rate limit exceeded. Waiting before retrying...")
@@ -69,6 +154,7 @@ def calculate_score(metrics):
 
 def get_twitter_leaderboard():
     """Get Twitter leaderboard data."""
+    leaderboard = []
     # Load your Bearer Token from a secure location
     with open('config.json') as f:
         config = json.load(f)
@@ -77,7 +163,18 @@ def get_twitter_leaderboard():
     try:
         # Search for tweets containing all three terms
         query = "@basedindia #indiaonchain"
-        result = search_tweets(query, bearer_token)
+        # result = search_tweets(query, bearer_token)
+        # take result from twitter_data_20241207_185113.json
+        result = json.load(open("data.json"))
+
+        # # Store raw Twitter API response in a JSON file
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # filename = f"twitter_data_{timestamp}.json"
+        # with open(filename, 'w', encoding='utf-8') as f:
+        #     json.dump(result, f, indent=2, ensure_ascii=False)
+
+        # print(f"Twitter API response saved to {filename}")
+        print(result)
 
         # Prepare data for leaderboard
         tweets_data = []
@@ -98,7 +195,12 @@ def get_twitter_leaderboard():
             })
 
         # Sort tweets by score
-        return sorted(tweets_data, key=lambda x: x['score'], reverse=True)
+
+        leaderboard = sorted(tweets_data, key=lambda x: x['score'], reverse=True)
+        print("leaderboard")
+        print(leaderboard)
+        store_leaderboard(leaderboard)
+        return leaderboard
 
     except Exception as e:
         print(f"Error: {e}")
@@ -135,6 +237,7 @@ def read_leaderboard() -> pd.DataFrame:
         return None
 
 def sign_and_distribute_rewards(wallet: Wallet, total_reward: str) -> List[str]:
+    results = []
     """Sign leaderboard and distribute rewards to top 3 wallets."""
     # Read leaderboard
     df = read_leaderboard()
@@ -148,7 +251,13 @@ def sign_and_distribute_rewards(wallet: Wallet, total_reward: str) -> List[str]:
 
         # Convert signature to string format
         signature_str = str(signature)
-
+        # Transaction and signature details
+        transaction_details = {
+            "wallet_address": wallet.default_address.address_id,
+            "leaderboard_signature": signature_str,
+            "leaderboard_data": leaderboard_data,
+            "distribution_results": results,
+        }
         # Store signature onchain using a smart contract invocation
         storage_contract_abi = [
             {
@@ -327,6 +436,12 @@ def choose_mode():
     print("Invalid choice. Please try again.")
 
 def main():
+    global db
+    db = initialize_firebase()
+    if not db:
+        print("Failed to initialize Firebase. Exiting...")
+        return
+
     agent_executor = initialize_agent()
     config = {
         "configurable": {

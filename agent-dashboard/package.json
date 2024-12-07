@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "firebase": "^11.0.2",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@types/firebase": "^2.4.32",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

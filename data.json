@@ -1,0 +1,74 @@
+{
+  "data": [
+    {
+      "created_at": "2024-12-07T13:50:58.000Z",
+      "edit_history_tweet_ids": [
+        "1865393566261866743"
+      ],
+      "author_id": "2378478427",
+      "text": "@BasedIndia #indiaonchain",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "id": "1865393566261866743"
+    },
+    {
+      "created_at": "2024-12-07T12:58:35.000Z",
+      "edit_history_tweet_ids": [
+        "1865380382939451611"
+      ],
+      "author_id": "1592212716097503232",
+      "text": "Build on base \nBasedIndia\n@BasedIndia #indiaonchain https://t.co/VP6X83SxeO",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 8
+      },
+      "id": "1865380382939451611"
+    },
+    {
+      "created_at": "2024-12-07T12:56:02.000Z",
+      "edit_history_tweet_ids": [
+        "1865379741307703404"
+      ],
+      "author_id": "2378478427",
+      "text": "test 2 : @BasedIndia #Indiaonchain",
+      "public_metrics": {
+        "retweet_count": 0,
+        "reply_count": 0,
+        "like_count": 0,
+        "quote_count": 0,
+        "bookmark_count": 0,
+        "impression_count": 10
+      },
+      "id": "1865379741307703404"
+    }
+  ],
+  "includes": {
+    "users": [
+      {
+        "id": "2378478427",
+        "name": "Gagan Gehani",
+        "username": "GaganGehani"
+      },
+      {
+        "id": "1592212716097503232",
+        "name": "Najid Navas",
+        "username": "naaji_navas"
+      }
+    ]
+  },
+  "meta": {
+    "newest_id": "1865393566261866743",
+    "oldest_id": "1865379741307703404",
+    "result_count": 3
+  }
+}
