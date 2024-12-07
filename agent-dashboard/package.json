@@ -14,7 +14,8 @@
     "firebase": "^11.0.2",
     "next": "15.0.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-tweet": "^3.2.1"
   },
   "devDependencies": {
     "@types/firebase": "^2.4.32",

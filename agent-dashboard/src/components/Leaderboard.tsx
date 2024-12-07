@@ -5,6 +5,16 @@ import { database, ref, onValue } from '@/firebase/firebase';
 import { LeaderboardEntry } from '@/types';
 import { DataSnapshot } from 'firebase/database';
 
+function generateRandomWallet(): string {
+  const chars = '0123456789abcdef';
+  let wallet = '0x';
+  for (let i = 0; i < 40; i++) {
+    wallet += chars[Math.floor(Math.random() * chars.length)];
+  }
+  // Return first 6 and last 4 characters with ellipsis
+  return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
+}
+
 export default function Leaderboard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,19 +57,27 @@ export default function Leaderboard() {
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl text-black font-semibold">Leaderboard</h2>
-        <a 
-          href="/history" 
-          className="text-blue-600 hover:text-blue-800 text-sm"
-        >
-          View History
-        </a>
+        <div className="space-x-4">
+          <a 
+            href="/recenttweets" 
+            className="text-blue-600 hover:text-blue-800 text-sm"
+          >
+            Recent Tweets
+          </a>
+          <a 
+            href="/history" 
+            className="text-blue-600 hover:text-blue-800 text-sm"
+          >
+            View History
+          </a>
+        </div>
       </div>
       
       <div className="space-y-4">
         {entries.length === 0 ? (
-          <p className="text-center text-gray-500">No entries yet</p>
+          <p className="text-center text-gray-700">No entries yet</p>
         ) : (
-          entries.map((entry, index) => (
+          entries.slice(0, 3).map((entry, index) => (
             <div key={`${entry.twitter_handle}-${entry.post_link}`} className="border-b pb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -73,11 +91,11 @@ export default function Leaderboard() {
                     >
                       @{entry.twitter_handle}
                     </a>
-                    <p className="text-sm text-gray-500 font-mono">{entry.wallet_address}</p>
+                    <p className="text-sm text-gray-700 font-mono">{generateRandomWallet()}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-black">{entry.score} points</p>
+                  <p className="font-semibold text-black">{Math.round(entry.score)} points</p>
                 </div>
               </div>
             </div>

@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import WalletCard from '@/components/WalletCard';
-import TransactionList from '@/components/Transaction';
-import Leaderboard from '@/components/Leaderboard';
+import dynamic from 'next/dynamic';
 import { AgentState, Transaction, LeaderboardEntry } from '@/types';
 import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
+
+// Dynamically import components with SSR disabled
+const WalletCard = dynamic(() => import('@/components/WalletCard'), { ssr: false });
+const TransactionList = dynamic(() => import('@/components/Transaction'), { ssr: false });
+const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { ssr: false });
 
 const WALLET_ADDRESS = '0x306404AEF545ec8D7591a9cE0c73BB83dbbb0a40';
 
@@ -80,7 +83,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold">Agent Dashboard</h1>
+          <h1 className="text-2xl text-black font-bold">Agent Dashboard</h1>
         </div>
       </nav>
 
@@ -90,7 +93,7 @@ export default function Dashboard() {
             agentState={agentState} 
             onFundWallet={handleFundWallet} 
           />
-          <Leaderboard entries={dummyLeaderboard} />
+          <Leaderboard />
         </div>
         
         <div className="mt-6">
