@@ -5,7 +5,7 @@ import WalletCard from '@/components/WalletCard';
 import TransactionList from '@/components/Transaction';
 import Leaderboard from '@/components/Leaderboard';
 import { AgentState, Transaction, LeaderboardEntry } from '@/types';
-import { getWalletBalance } from '@/utils/chain';
+import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
 
 const WALLET_ADDRESS = '0x306404AEF545ec8D7591a9cE0c73BB83dbbb0a40';
 
@@ -40,18 +40,33 @@ export default function Dashboard() {
     status: 'active',
   });
 
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
+
   useEffect(() => {
-    const fetchBalance = async () => {
-      const balance = await getWalletBalance(WALLET_ADDRESS);
-      setAgentState(prev => ({
-        ...prev,
-        balance
-      }));
+    const fetchData = async () => {
+      try {
+        setIsLoadingTransactions(true);
+        // Fetch balance
+        const balance = await getWalletBalance(WALLET_ADDRESS);
+        setAgentState(prev => ({
+          ...prev,
+          balance
+        }));
+
+        // Fetch transactions
+        const txs = await getWalletTransactions(WALLET_ADDRESS);
+        setTransactions(txs);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoadingTransactions(false);
+      }
     };
 
-    fetchBalance();
+    fetchData();
     // Set up polling every 30 seconds
-    const interval = setInterval(fetchBalance, 30000);
+    const interval = setInterval(fetchData, 30000);
     
     return () => clearInterval(interval);
   }, []);
@@ -79,7 +94,10 @@ export default function Dashboard() {
         </div>
         
         <div className="mt-6">
-          <TransactionList transactions={dummyTransactions} />
+          <TransactionList 
+            transactions={transactions} 
+            isLoading={isLoadingTransactions}
+          />
         </div>
       </main>
     </div>
