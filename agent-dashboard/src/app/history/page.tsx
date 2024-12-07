@@ -3,63 +3,16 @@
 import { useEffect, useState } from 'react';
 import { database, ref, onValue } from '@/firebase/firebase';
 import { DataSnapshot } from 'firebase/database';
-import { log } from 'console';
+import dynamic from 'next/dynamic';
 
-interface HistoryEntry {
-  entries: Array<{
-    post_link: string;
-    rank: number;
-    score: number;
-    twitter_handle: string;
-    wallet_address: string;
-  } | null>;
-  metadata: {
-    last_updated: string;
-    timestamp: string;
-    total_participants: number;
-  };
-}
-
-interface LeaderboardHistory {
-  [key: string]: HistoryEntry;
-}
-
-export default function HistoryPage() {
-  const [history, setHistory] = useState<LeaderboardHistory>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const historyRef = ref(database, 'leaderboard_history');
-    console.log(historyRef)
-
-    const unsubscribe = onValue(historyRef, (snapshot: DataSnapshot) => {
-      console.log(snapshot)
-      const data = snapshot.val();
-      if (data) {
-        console.log('Raw history data:', data); // Debug log
-        
-        // Filter out entries without proper data structure and empty timestamps
-        const validHistory = Object.entries(data)
-          .filter(([_, value]: [string, any]) => {
-            return value.entries && Array.isArray(value.entries) && value.metadata;
-          })
-          .reduce((acc, [key, value]: [string, any]) => ({
-            ...acc,
-            [key]: {
-              entries: (value.entries as any[]).filter(entry => entry !== null),
-              metadata: value.metadata as HistoryEntry['metadata']
-            }
-          }), {} as LeaderboardHistory);
-
-        console.log('Processed history:', validHistory); // Debug log
-        setHistory(validHistory);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
+// Dynamically import the page content with SSR disabled
+const HistoryContent = dynamic(() => Promise.resolve(function HistoryContent({ 
+  history, 
+  loading 
+}: { 
+  history: any, 
+  loading: boolean 
+}) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto py-8 px-4">
@@ -76,10 +29,9 @@ export default function HistoryPage() {
           <div className="space-y-8">
             {Object.entries(history)
               .sort(([_, dataA], [__, dataB]) => {
-                // Sort using metadata timestamp instead of key
                 const dateA = new Date(dataA.metadata.timestamp);
                 const dateB = new Date(dataB.metadata.timestamp);
-                return dateB.getTime() - dateA.getTime(); // Newest first
+                return dateB.getTime() - dateA.getTime();
               })
               .map(([timestamp, data]) => (
                 <div key={timestamp} className="bg-white rounded-lg shadow-lg p-6">
@@ -130,4 +82,37 @@ export default function HistoryPage() {
       </div>
     </div>
   );
+}), { ssr: false });
+
+export default function HistoryPage() {
+  const [history, setHistory] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const historyRef = ref(database, 'leaderboard_history');
+    
+    const unsubscribe = onValue(historyRef, (snapshot: DataSnapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const validHistory = Object.entries(data)
+          .filter(([_, value]: [string, any]) => {
+            return value.entries && Array.isArray(value.entries) && value.metadata;
+          })
+          .reduce((acc, [key, value]: [string, any]) => ({
+            ...acc,
+            [key]: {
+              entries: (value.entries as any[]).filter(entry => entry !== null),
+              metadata: value.metadata
+            }
+          }), {});
+
+        setHistory(validHistory);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return <HistoryContent history={history} loading={loading} />;
 } 
