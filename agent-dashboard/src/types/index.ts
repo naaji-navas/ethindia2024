@@ -6,7 +6,8 @@ export interface Transaction {
     details: string;
     amount?: string;
     recipient?: string;
-  }
+    transaction_hash?: string;
+}
   
   export interface LeaderboardEntry {
     twitter_handle: string;
