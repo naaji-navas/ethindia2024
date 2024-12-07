@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { database, ref, onValue } from '@/firebase/firebase';
+import { database, ref, onValue } from '../../firebase/firebase';
 import { DataSnapshot } from 'firebase/database';
 import { Tweet } from 'react-tweet';
 

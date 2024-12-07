@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { database, ref, onValue } from '@/firebase/firebase';
+import { database, ref, onValue } from '../firebase/firebase';
 import { LeaderboardEntry } from '@/types';
 import { DataSnapshot } from 'firebase/database';
 
@@ -37,7 +37,7 @@ export default function Leaderboard() {
         setEntries([]);
       }
       setLoading(false);
-    }, (error) => {
+    }, (error: Error) => {
       console.error('Firebase error:', error);
       setLoading(false);
     });
