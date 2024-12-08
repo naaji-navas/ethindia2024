@@ -1,3 +1,31 @@
+# Agent Dashboard
+
+A real-time dashboard for tracking social engagement and rewards on Base network. Built with Next.js, Firebase, and OnchainKit.
+
+## Features
+
+- Real-time leaderboard tracking
+- Wallet integration with Base network
+- Recent tweets display
+- Historical leaderboard data
+- USDC balance tracking
+- Wallet connection via OnchainKit
+
+## Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- A Firebase project with Realtime Database
+- Base network wallet
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory with:
+
+```env
+NEXT_PUBLIC
+```
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
