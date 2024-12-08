@@ -1,106 +1,67 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { AgentState, Transaction, LeaderboardEntry } from '@/types';
-import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
+import Link from 'next/link';
+import { WalletDefault } from '@coinbase/onchainkit/wallet';
 
-// Dynamically import components with SSR disabled
-const WalletCard = dynamic(() => import('@/components/WalletCard'), { ssr: false });
-const TransactionList = dynamic(() => import('@/components/Transaction'), { ssr: false });
-const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { ssr: false });
-
-const WALLET_ADDRESS = '0x306404AEF545ec8D7591a9cE0c73BB83dbbb0a40';
-
-// Dummy data
-const dummyTransactions: Transaction[] = [
-  {
-    id: '1',
-    type: 'reward',
-    timestamp: '2024-03-20 14:30:00',
-    status: 'success',
-    details: 'Distributed daily rewards to top 3 performers',
-    amount: '0.003',
-  },
-  // Add more dummy transactions...
-];
-
-const dummyLeaderboard: LeaderboardEntry[] = [
-  {
-    twitter_handle: 'crypto_enthusiast',
-    post_link: 'https://x.com/crypto_enthusiast/status/123456789',
-    score: 1250,
-    wallet_address: '0x1234...5678',
-  },
-  // Add more dummy entries...
-];
-
-export default function Dashboard() {
-  const [agentState, setAgentState] = useState<AgentState>({
-    wallet_address: WALLET_ADDRESS,
-    balance: '0',
-    network: 'Base Sepolia',
-    status: 'active',
-  });
-
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoadingTransactions(true);
-        // Fetch balance
-        const balance = await getWalletBalance(WALLET_ADDRESS);
-        setAgentState(prev => ({
-          ...prev,
-          balance
-        }));
-
-        // Fetch transactions
-        const txs = await getWalletTransactions(WALLET_ADDRESS);
-        setTransactions(txs);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoadingTransactions(false);
-      }
-    };
-
-    fetchData();
-    // Set up polling every 30 seconds
-    const interval = setInterval(fetchData, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleFundWallet = () => {
-    // Implement funding logic
-    console.log('Funding wallet...');
-  };
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl text-black font-bold">Agent Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <nav className="bg-transparent py-6">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            OnchainSentinel
+          </h1>
+          <WalletDefault />
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <WalletCard 
-            agentState={agentState} 
-            onFundWallet={handleFundWallet} 
-          />
-          <Leaderboard />
-        </div>
-        
-        <div className="mt-6">
-          <TransactionList 
-            transactions={transactions} 
-            isLoading={isLoadingTransactions}
-          />
+      <main className="max-w-7xl mx-auto px-4 py-20">
+        <div className="text-center space-y-8">
+          <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            OnchainSentinel
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            An autonomous agent that discovers and rewards your contributions on Base network. 
+            Automatically tracks social engagement and distributes rewards.
+          </p>
+
+          <div className="flex justify-center gap-6 mt-12">
+            <Link 
+              href="/dashboard" 
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2"
+            >
+              <span>Open Dashboard</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            <a 
+              href="https://github.com/yourusername/onchainsentinel" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center space-x-2"
+            >
+              <span>View on GitHub</span>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" clipRule="evenodd" />
+              </svg>
+            </a>
+          </div>
+
+          <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Autonomous Tracking</h3>
+              <p className="text-gray-400">Automatically monitors and tracks your social media engagement on Base network.</p>
+            </div>
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Smart Rewards</h3>
+              <p className="text-gray-400">Distributes rewards based on engagement metrics and contribution value.</p>
+            </div>
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">Real-time Updates</h3>
+              <p className="text-gray-400">Track your performance and rewards in real-time through an intuitive dashboard.</p>
+            </div>
+          </div>
         </div>
       </main>
     </div>
