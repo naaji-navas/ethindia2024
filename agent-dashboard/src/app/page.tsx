@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { AgentState, Transaction, LeaderboardEntry } from '@/types';
 import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
+import { WalletDefault } from '@coinbase/onchainkit/wallet';
 
 // Dynamically import components with SSR disabled
 const WalletCard = dynamic(() => import('@/components/WalletCard'), { ssr: false });
@@ -82,8 +83,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl text-black font-bold">Agent Dashboard</h1>
+          <WalletDefault />
         </div>
       </nav>
 
