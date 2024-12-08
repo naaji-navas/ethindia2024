@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { base } from 'wagmi/chains';
+import { createWeb3Modal } from '../../../node_modules/@web3modal/wagmi/react';
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

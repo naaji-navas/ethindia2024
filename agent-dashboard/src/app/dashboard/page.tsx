@@ -7,7 +7,7 @@ import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
 import { WalletDefault } from '@coinbase/onchainkit/wallet';
 
 // Dynamically import components with loading fallbacks
-const WalletCard = dynamic(() => import('@/components/WalletCard'), { 
+const WalletCard = dynamic(() => import('../../components/WalletCard'), { 
   ssr: false,
   loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-64" />
 });

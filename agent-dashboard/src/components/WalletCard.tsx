@@ -6,6 +6,7 @@ import { FundButton } from '@coinbase/onchainkit/fund';
 import { Address } from '@coinbase/onchainkit/identity';
 import { TokenChip } from '@coinbase/onchainkit/token';
 import '@coinbase/onchainkit/styles.css';
+import { useWeb3Modal } from '../../../node_modules/@web3modal/wagmi/react'
 
 const usdcToken = {
   address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as `0x${string}`,
