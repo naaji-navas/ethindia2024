@@ -2,14 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { AgentState, Transaction, LeaderboardEntry } from '@/types';
+import { AgentState, Transaction } from '@/types';
 import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
 import { WalletDefault } from '@coinbase/onchainkit/wallet';
 
-// Dynamically import components with SSR disabled
-const WalletCard = dynamic(() => import('@/components/WalletCard'), { ssr: false });
-const TransactionList = dynamic(() => import('@/components/Transaction'), { ssr: false });
-const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { ssr: false });
+// Dynamically import components with loading fallbacks
+const WalletCard = dynamic(() => import('@/components/WalletCard'), { 
+  ssr: false,
+  loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-64" />
+});
+
+const TransactionList = dynamic(() => import('@/components/Transaction'), { 
+  ssr: false,
+  loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-48" />
+});
+
+const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { 
+  ssr: false,
+  loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-64" />
+});
 
 const WALLET_ADDRESS = '0x306404AEF545ec8D7591a9cE0c73BB83dbbb0a40';
 
