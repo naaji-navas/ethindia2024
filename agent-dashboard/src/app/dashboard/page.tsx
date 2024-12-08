@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { AgentState, Transaction } from '@/types';
-import { getWalletBalance, getWalletTransactions } from '@/utils/chain';
+import { AgentState, Transaction } from '../../types';
+import { getWalletBalance, getWalletTransactions } from '../../utils/chain';
 import { WalletDefault } from '@coinbase/onchainkit/wallet';
 
 // Dynamically import components with loading fallbacks
@@ -12,12 +12,12 @@ const WalletCard = dynamic(() => import('../../components/WalletCard'), {
   loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-64" />
 });
 
-const TransactionList = dynamic(() => import('@/components/Transaction'), { 
+const TransactionList = dynamic(() => import('../../components/Transaction'), { 
   ssr: false,
   loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-48" />
 });
 
-const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { 
+const Leaderboard = dynamic(() => import('../../components/Leaderboard'), { 
   ssr: false,
   loading: () => <div className="bg-white rounded-lg shadow-md p-6 animate-pulse h-64" />
 });
