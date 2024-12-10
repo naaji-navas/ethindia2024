@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.35.8",
+    "ethers": "^6.13.4",
     "firebase": "^10.7.1",
     "next": "^14.2.20",
     "react": "^18",
