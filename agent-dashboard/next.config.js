@@ -1,16 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   webpack: (config) => {
-    config.experiments = {
-      ...config.experiments,
-      topLevelAwait: true,
-    };
+    config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
   },
-  // images: {
-  //   domains: ['assets.coingecko.com'],
-  // }
 }
 
 module.exports = nextConfig 
