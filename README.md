@@ -1,4 +1,4 @@
-# Agent Dashboard
+# Online Sentinel
 
 ## Overview
 
