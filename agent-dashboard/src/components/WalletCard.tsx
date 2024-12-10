@@ -7,14 +7,14 @@ import { Address } from '@coinbase/onchainkit/identity';
 import { TokenChip } from '@coinbase/onchainkit/token';
 import '@coinbase/onchainkit/styles.css';
 
-const usdcToken = {
-  address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as `0x${string}`,
-  chainId: 8453,
-  decimals: 6,
-  image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
-  name: 'USD Coin',
-  symbol: 'USDC',
-} as const;
+// const usdcToken = {
+//   address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as `0x${string}`,
+//   chainId: 8453,
+//   decimals: 6,
+//   image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
+//   name: 'USD Coin',
+//   symbol: 'USDC',
+// } as const;
 
 interface WalletCardProps {
   agentState: AgentState;
@@ -41,8 +41,8 @@ export default function WalletCard({ agentState, onFundWallet }: WalletCardProps
           <div>
             <p className="text-sm text-gray-900">Balance</p>
             <div className="flex items-center space-x-2">
-              <p className="font-semibold text-gray-900">{agentState.balance}</p>
-              <TokenChip token={usdcToken} />
+              <p className="font-semibold text-gray-900">{agentState.balance} USDC</p> 
+              {/* <TokenChip token={usdcToken} /> */}
             </div>
           </div>
           <FundButton

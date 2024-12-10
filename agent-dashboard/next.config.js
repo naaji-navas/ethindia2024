@@ -8,9 +8,9 @@ const nextConfig = {
     };
     return config;
   },
-  images: {
-    domains: ['assets.coingecko.com'],
-  }
+  // images: {
+  //   domains: ['assets.coingecko.com'],
+  // }
 }
 
 module.exports = nextConfig 
