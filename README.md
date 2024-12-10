@@ -77,4 +77,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any inquiries or support, please contact [your-email@example.com]. 
+For any inquiries or support, please contact najidnavas2000@gmail.com 
