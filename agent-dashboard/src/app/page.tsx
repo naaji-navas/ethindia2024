@@ -36,7 +36,7 @@ export default function Home() {
               </svg>
             </Link>
             <a 
-              href="https://github.com/yourusername/onchainsentinel" 
+              href="https://github.com/naaji-navas/ethindia2024" 
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center space-x-2"
