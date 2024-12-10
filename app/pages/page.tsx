@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { WalletDefault } from '@coinbase/onchainkit/wallet';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
@@ -60,4 +61,4 @@ export default function Home() {
       </main>
     </div>
   );
-}
+} 

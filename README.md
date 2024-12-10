@@ -2,14 +2,8 @@
 
 ## Overview
 
-The Agent Dashboard is a web application designed to interact with blockchain technologies using the Coinbase Developer Platform. It provides functionalities such as viewing wallet balances, transaction history, and a leaderboard based on Twitter engagement metrics. The application is built using Next.js, React, and Firebase for real-time data management.
 
-## Features
-
-- **Wallet Management**: View wallet balance and transaction history.
-- **Leaderboard**: Displays top Twitter users based on engagement metrics.
-- **Rewards Distribution**: Automatically distribute rewards to top users.
-- **Real-time Updates**: Utilizes Firebase Realtime Database for live data updates.
+OnchainSentinel is the first autonomous, onchain agent that discovers and rewards creators driving attention to Base. It automatically tracks social engagement, creates onchain leaderboards, and distributes rewards. Built using Next.js, React, and Firebase, it leverages the Coinbase Developer Platform for blockchain interactions.
 
 ## Technologies Used
 
@@ -18,6 +12,8 @@ The Agent Dashboard is a web application designed to interact with blockchain te
 - **Firebase**: Used for authentication and real-time database.
 - **Coinbase Onchainkit**: For blockchain interactions.
 - **Tailwind CSS**: A utility-first CSS framework for styling.
+
+
 
 ## Installation
 
