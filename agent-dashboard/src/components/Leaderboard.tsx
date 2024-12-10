@@ -91,7 +91,7 @@ export default function Leaderboard() {
                     >
                       @{entry.twitter_handle}
                     </a>
-                    <p className="text-sm text-gray-700 font-mono">{generateRandomWallet()}</p>
+                   
                   </div>
                 </div>
                 <div className="text-right">
